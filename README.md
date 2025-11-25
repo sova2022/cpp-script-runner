@@ -42,7 +42,3 @@ export PATH="/c/Qt/5.15.0/msvc2019_64/bin:$PATH" # ваш путь к папке
 # или
 ./Release/cpp-script-runner.exe # если собирали Release
  ```
-
-
-
-

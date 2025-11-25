@@ -17,8 +17,14 @@ find_package(Qt5
 
 set(PROJECT_SOURCES
     src/main.cpp
+    src/canvas.h
+    src/canvas.cpp
+    src/ui.h
+    src/ui.cpp
     src/script_runner.h
     src/script_runner.cpp
+    resources/resources.rc
+    resources/resources.qrc
 )
 
 add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})
@@ -38,3 +44,5 @@ target_link_libraries(${PROJECT_NAME}
         Qt::Widgets
         Qt::Network
 )
+
+target_compile_options(cpp-script-runner PRIVATE /wd4127)

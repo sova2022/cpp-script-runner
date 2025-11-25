@@ -4,7 +4,10 @@
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
-    qDebug() << "Hello World";
+    
+    ScriptRunner sr;
+    sr.Show();
 
+    sr.TestDraw();
     return app.exec();
 }
