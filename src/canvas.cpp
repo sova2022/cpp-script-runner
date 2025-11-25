@@ -3,6 +3,8 @@
 #include <QPainter>
 #include <QPolygonF>
 
+// CanvasWidget
+
 CanvasWidget::CanvasWidget(QWidget* parent) : QWidget(parent) {
     setMinimumSize(400, 400);
 }
@@ -84,4 +86,40 @@ void CanvasWidget::paintEvent(QPaintEvent*) {
 void CanvasWidget::Clear() {
     cmds_.clear();
     update();
+}
+
+// CanvasAPI
+
+CanvasAPI::CanvasAPI(CanvasWidget* canvas, QObject* parent)
+    : QObject(parent), canvas_(canvas) {
+}
+
+void CanvasAPI::line(double x1, double y1, double x2, double y2, const QString& color) {
+    if (canvas_) {
+        canvas_->AddLine(x1, y1, x2, y2, color);
+    }
+}
+
+void CanvasAPI::rect(double x, double y, double w, double h, const QString& color) {
+    if (canvas_) {
+        canvas_->AddRect(x, y, w, h, color);
+    }
+}
+
+void CanvasAPI::ellipse(double x, double y, double w, double h, const QString& color) {
+    if (canvas_) {
+        canvas_->AddEllipse(x, y, w, h, color);
+    }
+}
+
+void CanvasAPI::triangle(double x1, double y1, double x2, double y2, double x3, double y3, const QString& color) {
+    if (canvas_) {
+        canvas_->AddTriangle(x1, y1, x2, y2, x3, y3, color);
+    }
+}
+
+void CanvasAPI::clear() {
+    if (canvas_) {
+        canvas_->Clear();
+    }
 }
