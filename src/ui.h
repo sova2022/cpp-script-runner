@@ -16,6 +16,15 @@
 const QString NAME_PROGRAMM = "Script Runner";
 const QString VERSION = "ver. 1.0.0";
 
+/**
+ * @brief Главное окно приложения Script Runner.
+ *
+ * Отвечает за размещение элементов интерфейса:
+ * - область отрисовки (CanvasWidget)
+ * - поле для ввода IP адреса
+ * - кнопка запуска скрипта
+ * - строка состояния
+ */
 class Ui : public QMainWindow {
     Q_OBJECT
 public:
