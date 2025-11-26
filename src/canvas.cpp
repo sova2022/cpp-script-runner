@@ -3,6 +3,18 @@
 #include <QPainter>
 #include <QPolygonF>
 
+inline Shape BuildShape(const ShapeType type, const QVariant& data, 
+    const QColor& color = Qt::black, const QColor& fillColor = Qt::white) {
+    Shape s;
+
+    s.type = type;
+    s.data = data;    
+    s.strokeColor = color;
+    s.fillColor = fillColor;
+
+    return s;
+}
+
 // CanvasWidget
 
 CanvasWidget::CanvasWidget(QWidget* parent) 
@@ -27,17 +39,17 @@ void CanvasWidget::paintEvent(QPaintEvent*) {
         p.setBrush(brush);
 
         switch (s.type) {
-        case Type::Line:
+        case ShapeType::Line:
             p.setBrush(Qt::NoBrush);
             p.drawLine(s.data.toLineF());
             break;
-        case Type::Rect:
+        case ShapeType::Rect:
             p.drawRect(s.data.toRectF());
             break;
-        case Type::Ellipse:
+        case ShapeType::Ellipse:
             p.drawEllipse(s.data.toRectF());
             break;
-        case Type::Triangle:
+        case ShapeType::Triangle:
             p.drawPolygon(s.data.value<QPolygonF>());
             break;        
         }
@@ -63,10 +75,12 @@ void CanvasAPI::clear() {
 
 void CanvasAPI::line(double x1, double y1, double x2, double y2, const QString& color) {
     if (canvas_) {
-        Shape s;
-        s.data = QLineF(x1, y1, x2, y2);
-        s.strokeColor = QColor(color);
-        s.type = Type::Line;
+        Shape s = BuildShape(
+            ShapeType::Line,
+            QVariant::fromValue(QLineF(x1, y1, x2, y2)),
+            QColor(color)
+        );
+
         canvas_->AddShape(s);
     }
 }
@@ -74,11 +88,13 @@ void CanvasAPI::line(double x1, double y1, double x2, double y2, const QString& 
 void CanvasAPI::rect(double x, double y, double w, double h, 
     const QString& color, const QString& fillColor) {
     if (canvas_) {
-        Shape s;
-        s.data = QRectF(x, y, w, h);
-        s.strokeColor = QColor(color);
-        s.fillColor = QColor(fillColor);
-        s.type = Type::Rect;
+        Shape s = BuildShape(
+            ShapeType::Rect,
+            QVariant::fromValue(QRectF(x, y, w, h)),
+            QColor(color),
+            QColor(fillColor)        
+        );
+
         canvas_->AddShape(s);
     }
 }
@@ -86,28 +102,32 @@ void CanvasAPI::rect(double x, double y, double w, double h,
 void CanvasAPI::ellipse(double x, double y, double w, double h, 
     const QString& color, const QString& fillColor) {
     if (canvas_) {
-        Shape s;
-        s.data = QRectF(x, y, w, h);
-        s.strokeColor = QColor(color);
-        s.fillColor = QColor(fillColor);
-        s.type = Type::Ellipse;
+        Shape s = BuildShape(
+            ShapeType::Ellipse,
+            QVariant::fromValue(QRectF(x, y, w, h)),
+            QColor(color),
+            QColor(fillColor)
+        );
+
         canvas_->AddShape(s);
     }
 }
 
 void CanvasAPI::triangle(double x1, double y1, double x2, double y2, double x3, double y3,
     const QString& color, const QString& fillColor) {
-    if (canvas_) {
-        Shape s;
+    if (canvas_) {        
         QPolygonF poly;
         poly << QPointF(x1, y1)
              << QPointF(x2, y2)
              << QPointF(x3, y3);
 
-        s.data = poly;
-        s.strokeColor = QColor(color);
-        s.fillColor = QColor(fillColor);
-        s.type = Type::Triangle;
+        Shape s = BuildShape(
+            ShapeType::Triangle,
+            QVariant::fromValue(poly),
+            QColor(color),
+            QColor(fillColor)
+        );
+
         canvas_->AddShape(s);
     }
 }

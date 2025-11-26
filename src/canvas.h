@@ -5,7 +5,7 @@
 
 Q_DECLARE_METATYPE(QPolygonF)
 
-enum Type {
+enum ShapeType {
     Line,
     Rect,
     Ellipse,
@@ -13,12 +13,19 @@ enum Type {
 };
 
 struct Shape {
-    Type type;    
+    ShapeType type;
     QColor strokeColor = Qt::black;
-    QColor fillColor   = Qt::transparent;
+    QColor fillColor   = Qt::white;
     double strokeWidth = 1.0;
     QVariant data;
 };
+
+/**
+ * @brief Виджет холста для рисования фигур.
+ *
+ * Отвечает за хранение фигур и их рендеринг.
+ * Поддерживает линии, прямоугольники, эллипсы и треугольники.
+ */
 
 class CanvasWidget : public QWidget {
     Q_OBJECT
@@ -44,12 +51,11 @@ public:
 public slots:
     void clear();
     void line(double x1, double y1, double x2, double y2, const QString& color = "black");
-    void rect(double x, double y, double w, double h, const QString& color = "black", const QString& fillColor = "");
-    void ellipse(double x, double y, double w, double h, const QString& color = "black", const QString& fillColor = "");
+    void rect(double x, double y, double w, double h, const QString& color = "black", const QString& fillColor = "transparent");
+    void ellipse(double x, double y, double w, double h, const QString& color = "black", const QString& fillColor = "transparent");
     void triangle(double x1, double y1, double x2, double y2, double x3, double y3, const QString& color = "black", 
-        const QString& fillColor = "");
+        const QString& fillColor = "transparent");
     
-
 private:
     CanvasWidget* canvas_;
 };

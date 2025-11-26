@@ -3,9 +3,10 @@
 #include <QDebug>
 
 int main(int argc, char *argv[]) {
-    QApplication app(argc, argv);
     qRegisterMetaType<QPolygonF>("QPolygonF");
-    
+
+    QApplication app(argc, argv);
+        
     ScriptRunner sr;
     sr.Show();
     sr.ConnectWidgetsSignals();
