@@ -23,6 +23,8 @@ set(PROJECT_SOURCES
     src/ui.cpp
     src/script_runner.h
     src/script_runner.cpp
+    src/udp_file_client.h
+    src/udp_file_client.cpp
     resources/resources.rc
     resources/resources.qrc
 )
