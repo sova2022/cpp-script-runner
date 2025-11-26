@@ -2,6 +2,7 @@
 
 #include <QtWidgets/QMainWindow>
 #include <QRegularExpression>
+#include <QScriptEngine>
 
 #include "ui.h"
 #include "udp_file_client.h"
@@ -18,7 +19,10 @@ public:
 		, ui_(new Ui())
 		, canvasApi_(new CanvasAPI(ui_->GetCanvas()))
 		, client_(new UdpFileClient(this)) {
-
+		engine_.globalObject().setProperty(
+			"canvas",
+			engine_.newQObject(canvasApi_)
+		);
 	}
 
 	~ScriptRunner() override {
@@ -27,19 +31,11 @@ public:
 
 	void ConnectWidgetsSignals() {
 		connect(ui_->GetRunBtn(), &QPushButton::clicked, this, &ScriptRunner::onRun);
-
+		connect(client_, &UdpFileClient::scriptReceived, this, &ScriptRunner::onScriptRecieved);
 	}
 
 	void Show() {
 		ui_->show();
-	}
-
-	void TestDraw() {
-		canvasApi_->clear();
-		canvasApi_->line(10, 10, 200, 10, "blue");
-		canvasApi_->rect(50, 50, 100, 80, "green");
-		canvasApi_->ellipse(200, 100, 60, 60, "red");
-		canvasApi_->triangle(300, 300, 350, 300, 325, 250, "magenta");
 	}
 
 public slots:
@@ -51,7 +47,6 @@ private slots:
 	}
 
 	void onRun() {
-		qDebug() << "qq";
 		QString ip = ui_->GetIpEdit()->text();
 		auto match = IP_REGEX.match(ip);
 
@@ -62,10 +57,27 @@ private slots:
 		requestScript();
 	}
 
+	void onScriptRecieved(const QString script) {
+		QScriptValue result = engine_.evaluate(script);
+		if (engine_.hasUncaughtException()) {
+			int line = engine_.uncaughtExceptionLineNumber();
+			QString message = result.toString();
+
+			QMessageBox::critical(
+				ui_,
+				"Script Error",
+				QString("Error at line %1:\n%2").arg(line).arg(message)
+			);
+
+			return;
+		}
+	}
+
 
 private:
 	Ui* ui_;
 	CanvasAPI* canvasApi_;
 	UdpFileClient* client_;
+	QScriptEngine engine_;
 };
 

@@ -9,7 +9,6 @@ int main(int argc, char *argv[]) {
     ScriptRunner sr;
     sr.Show();
     sr.ConnectWidgetsSignals();
-    sr.TestDraw();
 
     return app.exec();
 }

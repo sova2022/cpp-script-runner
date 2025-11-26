@@ -12,7 +12,8 @@ find_package(Qt5
         Core
         Gui
         Widgets        
-        Network
+        Network  
+        Script
 )
 
 set(PROJECT_SOURCES
@@ -45,6 +46,7 @@ target_link_libraries(${PROJECT_NAME}
         Qt::Gui
         Qt::Widgets
         Qt::Network
+        Qt5::Script
 )
 
 target_compile_options(cpp-script-runner PRIVATE /wd4127)

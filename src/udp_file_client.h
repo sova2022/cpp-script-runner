@@ -26,16 +26,16 @@ public:
     }
 
 signals:
-    void scriptReceived(QString script);
+    void scriptReceived(const QString script);
 
 
 private slots:
     void readPendingDatagrams() {
         while (socket_->hasPendingDatagrams()) {
             QNetworkDatagram datagram = socket_->receiveDatagram();
-            QString script = QString::fromUtf8(datagram.data());
-            qDebug() << script;
-            //emit scriptReceived(script);
+            const QString script = QString::fromUtf8(datagram.data());
+
+            emit scriptReceived(script);
         }
     }
 
