@@ -1,6 +1,9 @@
 #pragma once
 #include <QWidget>
 #include <QPainter>
+#include <QVariant>
+
+Q_DECLARE_METATYPE(QPolygonF)
 
 enum Type {
     Line,
@@ -9,28 +12,27 @@ enum Type {
     Triangle
 };
 
-struct DrawCommand {
+struct Shape {
     Type type;
-    QColor color;
-    double x1, y1, x2, y2, x3, y3, w, h;
+    QVariant data;
+    QColor strokeColor;
+    QColor fillColor;
+    double strokeWidth = 1.0;
 };
 
 class CanvasWidget : public QWidget {
     Q_OBJECT
 public:
     explicit CanvasWidget(QWidget* parent = nullptr);
-    
-    void AddLine(double x1, double y1, double x2, double y2, QColor color);
-    void AddRect(double x, double y, double w, double h, QColor color);
-    void AddEllipse(double x, double y, double w, double h, QColor color);
-    void AddTriangle(double x1, double y1, double x2, double y2, double x3, double y3, QColor color);
+
+    void AddShape(const Shape& shape);
     void Clear();
 
 protected:
     void paintEvent(QPaintEvent* event) override;
 
 private:
-    QVector<DrawCommand> cmds_;
+    QVector<Shape> shapes_;
 };
 
 
